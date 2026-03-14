@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout | CineVault</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .checkout-container {
+            max-width: 1000px;
+            margin: 120px auto 4rem;
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 2rem;
+            padding: 0 1rem;
+        }
+
+        .checkout-section {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-light);
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        /* Movie Info Mini Card */
+        .movie-summary {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .movie-summary img {
+            width: 100px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            color: var(--text-secondary);
+        }
+        .detail-row.bold {
+            color: white;
+            font-weight: 600;
+        }
+        .detail-row.total {
+            font-size: 1.5rem;
+            color: white;
+            border-top: 1px dashed var(--border-light);
+            padding-top: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .detail-row.total span:last-child {
+            color: var(--accent-red);
+        }
+
+        .promo-box {
+            display: flex;
+            gap: 0.5rem;
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border-light);
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        /* Form Styles specifically for checkout */
+        .input-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 900px) {
+            .checkout-container { grid-template-columns: 1fr; }
+            .input-group { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body class="page-enter">
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">CINE<span>VAULT</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="checkout-container">
+        <!-- Left: Payment Details -->
+        <div class="checkout-section reveal stagger-1">
+            <h2 class="section-title"><i class="fa-regular fa-credit-card"></i> Payment Details</h2>
+            
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label class="form-label">Name on Card</label>
+                    <input type="text" class="form-control" placeholder="John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Card Number</label>
+                    <div style="position: relative;">
+                        <i class="fa-brands fa-cc-visa" style="position: absolute; left: 1rem; top: 1rem; color: #fff; font-size: 1.2rem;"></i>
+                        <input type="text" class="form-control" placeholder="0000 0000 0000 0000" style="padding-left: 3rem;" required maxlength="19">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div class="form-group">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="text" class="form-control" placeholder="MM/YY" required maxlength="5">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">CVV</label>
+                        <input type="password" class="form-control" placeholder="123" required maxlength="3">
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-top: 2rem;">
+                    <label class="form-label">Email for Ticket</label>
+                    <input type="email" id="userEmail" class="form-control" placeholder="john@example.com" required>
+                </div>
+            </form>
+        </div>
+
+        <!-- Right: Order Summary -->
+        <div class="checkout-section reveal stagger-2">
+            <h2 class="section-title"><i class="fa-solid fa-receipt"></i> Booking Summary</h2>
+            
+            <div class="movie-summary">
+                <img id="sumPoster" src="" alt="Movie Poster">
+                <div>
+                    <h3 id="sumTitle" style="font-size: 1.2rem; margin-bottom: 0.5rem;">Movie Title</h3>
+                    <p id="sumTheatre" class="text-secondary" style="font-size: 0.9rem; margin-bottom: 0.2rem;"><i class="fa-solid fa-location-dot"></i> Theatre Name</p>
+                    <p id="sumDateTime" class="text-secondary" style="font-size: 0.9rem;"><i class="fa-regular fa-calendar"></i> Date & Time</p>
+                </div>
+            </div>
+
+            <div class="detail-row">
+                <span>Seats (<span id="sumSeatCount">0</span>)</span>
+                <span id="sumSeats" style="font-weight: 500; color: white;">A1, A2</span>
+            </div>
+            
+            <div class="detail-row">
+                <span>Tickets Amount</span>
+                <span>$<span id="sumSubTotal">0.00</span></span>
+            </div>
+            
+            <div class="detail-row">
+                <span>Convenience Fee</span>
+                <span>$<span id="sumFee">4.00</span></span>
+            </div>
+
+            <div class="promo-box">
+                <input type="text" id="promoCode" class="form-control" placeholder="Promo Code (e.g., CINEVIP20)">
+                <button type="button" id="applyPromoBtn" class="btn btn-outline">Apply</button>
+            </div>
+            
+            <div class="detail-row" id="discountRow" style="display: none; color: #22c55e;">
+                <span>Discount applied</span>
+                <span>-$<span id="sumDiscount">0.00</span></span>
+            </div>
+
+            <div class="detail-row total">
+                <span>Total Pay</span>
+                <span>$<span id="sumTotal">0.00</span></span>
+            </div>
+
+            <button type="submit" form="paymentForm" class="btn btn-primary" style="width: 100%; margin-top: 1.5rem; padding: 1rem; font-size: 1.1rem; border-radius: 12px;">
+                <i class="fa-solid fa-lock" style="margin-right: 8px;"></i> Pay Securely
+            </button>
+        </div>
+    </div>
+
+    <!-- Processing Overlay -->
+    <div id="processingOverlay" class="modal-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+        <div class="loader" style="width: 60px; height: 60px; border-width: 4px; margin-bottom: 2rem;"></div>
+        <h2 class="text-gradient">Processing Booking...</h2>
+        <p class="text-secondary">Please do not refresh the page.</p>
+    </div>
+
+    <script type="module" src="js/supabase.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/checkout.js"></script>
+</body>
+</html>

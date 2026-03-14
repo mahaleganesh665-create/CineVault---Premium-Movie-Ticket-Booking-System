@@ -1,0 +1,7 @@
+-- 4. Insert Dummy Movies Data
+INSERT INTO public.movies (id, title, genre, duration, rating, language, poster, banner, description)
+VALUES 
+    (gen_random_uuid(), 'The Cosmic Void', 'Sci-Fi', '2h 30m', 4.8, 'English', 'https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=600&auto=format&fit=crop', 'https://images.unsplash.com/photo-1543722530-d2c3201371e7?q=80&w=2074&auto=format&fit=crop', 'An epic journey to the edge of the universe where time and space collapse.'),
+    (gen_random_uuid(), 'Neon Shadows', 'Action', '2h 15m', 4.5, 'English', 'https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=600&auto=format&fit=crop', 'https://images.unsplash.com/photo-1605806616949-1e87b487cb2a?q=80&w=2070&auto=format&fit=crop', 'A cyberpunk thriller set in a dystopian future where hackers rule the underworld.'),
+    (gen_random_uuid(), 'Desert Protocol', 'Thriller', '1h 50m', 4.2, 'Hindi', 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=600&auto=format&fit=crop', 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?q=80&w=2076&auto=format&fit=crop', 'A high-stakes espionage mission that goes wrong in the middle of nowhere.'),
+    (gen_random_uuid(), 'Echoes of Time', 'Drama', '2h 05m', 4.6, 'English', 'https://images.unsplash.com/photo-1440407876336-62333a6f010f?q=80&w=600&auto=format&fit=crop', 'https://images.unsplash.com/photo-1440407876336-62333a6f010f?q=80&w=2074&auto=format&fit=crop', 'A heart-wrenching story of love, loss, and the memories that bind us together.');

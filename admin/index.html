@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | CineVault</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/animations.css">
+
+    <style>
+        .admin-layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-light);
+            padding: 2rem 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-link {
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: var(--text-secondary);
+            transition: all var(--transition-fast);
+        }
+
+        .side-link:hover, .side-link.active {
+            background: rgba(229, 9, 20, 0.1);
+            color: white;
+            border-right: 3px solid var(--accent-red);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 2rem 3rem;
+            background: var(--bg-primary);
+            overflow-y: auto;
+        }
+
+        .dash-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .d-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-light);
+            padding: 1.5rem;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .d-icon {
+            width: 50px; height: 50px;
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .d-card h4 { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .d-card .num { font-size: 1.8rem; font-weight: 700; font-family: var(--font-heading); }
+
+        .table-wrap {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        th { background: rgba(0,0,0,0.2); color: var(--text-secondary); font-weight: 500; font-size: 0.9rem; text-transform: uppercase; }
+        
+        tr:hover { background: rgba(255,255,255,0.02); }
+
+        .action-btn { display: inline-block; padding: 0.3rem 0.6rem; border-radius: 4px; font-size: 0.8rem; cursor: pointer; }
+        .btn-edit { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .btn-del { background: rgba(229, 9, 20, 0.2); color: var(--accent-red); }
+
+        /* Modal Styles */
+        .modal {
+            display: none; position: fixed; z-index: 2000; left: 0; top: 0;
+            width: 100%; height: 100%; overflow: auto;
+            background-color: rgba(0,0,0,0.8);
+            backdrop-filter: blur(5px);
+            align-items: center; justify-content: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--bg-secondary); border: 1px solid var(--border-light);
+            border-radius: 12px; padding: 2rem; width: 90%; max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.8);
+            position: relative;
+        }
+        .close-modal { position: absolute; right: 1.5rem; top: 1.5rem; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary); }
+        .close-modal:hover { color: white; }
+        
+        /* Tab Views */
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from {opacity: 0; transform: translateY(10px);} to {opacity: 1; transform: translateY(0);} }
+    </style>
+</head>
+<body>
+
+    <div class="admin-layout page-enter">
+        <aside class="sidebar">
+            <div class="nav-logo" style="padding: 0 2rem; margin-bottom: 3rem; font-size: 1.5rem;">CINE<span>ADMIN</span></div>
+            
+            <a href="#" class="side-link active" data-tab="dashboard"><i class="fa-solid fa-chart-pie"></i> Dashboard</a>
+            <a href="#" class="side-link" data-tab="movies"><i class="fa-solid fa-film"></i> Movies</a>
+            <a href="#" class="side-link" data-tab="theatres"><i class="fa-solid fa-building"></i> Theatres</a>
+            <a href="#" class="side-link" data-tab="bookings"><i class="fa-solid fa-ticket"></i> Bookings</a>
+            
+            <div style="margin-top: auto;">
+                <a href="../index.html" class="side-link"><i class="fa-solid fa-arrow-right-from-bracket"></i> Exit to Site</a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <!-- DASHBOARD TAB -->
+            <div id="dashboard" class="tab-content active">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 2rem;">Overview</h2>
+                    <button class="btn btn-primary" onclick="window.openMovieModal()"><i class="fa-solid fa-plus"></i> Add Movie</button>
+                </div>
+
+                <div class="dash-cards">
+                    <div class="d-card reveal stagger-1">
+                        <div>
+                            <h4>Total Revenue</h4>
+                            <div class="num text-gold" id="statRevenue">$0</div>
+                        </div>
+                        <div class="d-icon" style="background: rgba(212, 175, 55, 0.1); color: var(--accent-gold);"><i class="fa-solid fa-dollar-sign"></i></div>
+                    </div>
+                    <div class="d-card reveal stagger-2">
+                        <div>
+                            <h4>Total Bookings</h4>
+                            <div class="num text-blue" id="statBookings">0</div>
+                        </div>
+                        <div class="d-icon" style="background: rgba(59, 130, 246, 0.1); color: var(--accent-blue);"><i class="fa-solid fa-ticket"></i></div>
+                    </div>
+                    <div class="d-card reveal stagger-3">
+                        <div>
+                            <h4>Active Movies</h4>
+                            <div class="num text-red" id="statMovies">0</div>
+                        </div>
+                        <div class="d-icon" style="background: rgba(229, 9, 20, 0.1); color: var(--accent-red);"><i class="fa-solid fa-film"></i></div>
+                    </div>
+                </div>
+
+                <h3 style="margin-bottom: 1.5rem; font-size: 1.2rem;">Recent Bookings</h3>
+                <div class="table-wrap reveal stagger-5">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ref ID</th>
+                                <th>Movie</th>
+                                <th>Date</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminBookingsTableContent">
+                            <tr><td colspan="5" style="text-align: center;">Loading data...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- MOVIES TAB -->
+            <div id="movies" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 2rem;">Manage Movies</h2>
+                    <button class="btn btn-primary" onclick="window.openMovieModal()"><i class="fa-solid fa-plus"></i> Add Movie</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Genre</th>
+                                <th>Rating</th>
+                                <th>Language</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="moviesTableBody">
+                            <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- THEATRES TAB -->
+            <div id="theatres" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 2rem;">Manage Theatres</h2>
+                    <button class="btn btn-primary" onclick="alert('Add Theatre Coming Soon')"><i class="fa-solid fa-plus"></i> Add Theatre</button>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Location</th>
+                                <th>Screens</th>
+                                <th>Amenities</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="theatresTableBody">
+                            <tr><td colspan="5" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- BOOKINGS TAB -->
+            <div id="bookings" class="tab-content">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                    <h2 style="font-size: 2rem;">All Bookings</h2>
+                </div>
+                <div class="table-wrap">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Ref ID</th>
+                                <th>Movie</th>
+                                <th>Date</th>
+                                <th>Seats</th>
+                                <th>User</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="allBookingsTableBody">
+                            <tr><td colspan="6" style="text-align: center;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL: ADD MOVIE -->
+    <div id="addMovieModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="window.closeMovieModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;">Add New Movie</h2>
+            <form id="addMovieForm" onsubmit="window.submitNewMovie(event)">
+                <div class="form-group">
+                    <label class="form-label">Movie Title</label>
+                    <input type="text" id="m_title" class="form-control" required placeholder="e.g. Inception">
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Genre</label>
+                        <input type="text" id="m_genre" class="form-control" required placeholder="Action, Sci-Fi...">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Language</label>
+                        <input type="text" id="m_lang" class="form-control" required placeholder="Hindi, English...">
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Duration</label>
+                        <input type="text" id="m_dur" class="form-control" required placeholder="2h 30m">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Rating</label>
+                        <input type="number" step="0.1" max="5" id="m_rate" class="form-control" required placeholder="4.5">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Poster Image URL <span class="text-secondary">(Required)</span></label>
+                    <input type="url" id="m_poster" class="form-control" required placeholder="https://image.tmdb.org/...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="m_desc" class="form-control" rows="3" required placeholder="Movie plot..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Add to Database</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: EDIT MOVIE -->
+    <div id="editMovieModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="window.closeEditMovieModal()">&times;</span>
+            <h2 style="margin-bottom: 1.5rem;">Edit Movie Details</h2>
+            <form id="editMovieForm" onsubmit="window.submitEditMovie(event)">
+                <input type="hidden" id="edit_m_id">
+                
+                <div class="form-group">
+                    <label class="form-label">Movie Title</label>
+                    <input type="text" id="edit_m_title" class="form-control" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Genre</label>
+                        <input type="text" id="edit_m_genre" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Language</label>
+                        <input type="text" id="edit_m_lang" class="form-control" required>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Duration</label>
+                        <input type="text" id="edit_m_dur" class="form-control" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Rating</label>
+                        <input type="number" step="0.1" max="5" id="edit_m_rate" class="form-control" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Poster Image URL</label>
+                    <input type="url" id="edit_m_poster" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea id="edit_m_desc" class="form-control" rows="3" required></textarea>
+                </div>
+                
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../js/supabase.js"></script>
+    <script type="module" src="../js/app.js"></script>
+    <script type="module" src="./admin.js"></script>
+</body>
+</html>

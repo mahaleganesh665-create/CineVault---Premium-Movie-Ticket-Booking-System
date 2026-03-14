@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Not Found | CineVault</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .error-page {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            background: var(--bg-primary);
+        }
+
+        .glitch-wrapper {
+            position: relative;
+        }
+
+        .glitch-text {
+            font-family: var(--font-heading);
+            font-size: clamp(6rem, 15vw, 12rem);
+            font-weight: 800;
+            line-height: 1;
+            margin: 0;
+            color: white;
+            position: relative;
+        }
+
+        .glitch-text::before, .glitch-text::after {
+            content: "404";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-primary);
+        }
+
+        .glitch-text::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--accent-red);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim 5s infinite linear alternate-reverse;
+        }
+
+        .glitch-text::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--accent-blue);
+            clip: rect(44px, 450px, 56px, 0);
+            animation: glitch-anim2 5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitch-anim {
+            0% { clip: rect(10px, 9999px, 83px, 0); }
+            20% { clip: rect(3px, 9999px, 89px, 0); }
+            40% { clip: rect(62px, 9999px, 20px, 0); }
+            60% { clip: rect(82px, 9999px, 90px, 0); }
+            80% { clip: rect(11px, 9999px, 83px, 0); }
+            100% { clip: rect(55px, 9999px, 40px, 0); }
+        }
+
+        @keyframes glitch-anim2 {
+            0% { clip: rect(65px, 9999px, 100px, 0); }
+            20% { clip: rect(32px, 9999px, 3px, 0); }
+            40% { clip: rect(19px, 9999px, 44px, 0); }
+            60% { clip: rect(84px, 9999px, 34px, 0); }
+            80% { clip: rect(11px, 9999px, 80px, 0); }
+            100% { clip: rect(98px, 9999px, 20px, 0); }
+        }
+    </style>
+</head>
+<body class="page-enter">
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">CINE<span>VAULT</span></a>
+        </div>
+    </nav>
+
+    <div class="error-page">
+        <div class="container" style="position: relative; z-index: 2;">
+            <div class="glitch-wrapper reveal stagger-1">
+                <h1 class="glitch-text">404</h1>
+            </div>
+            <h2 class="reveal stagger-2" style="font-size: 2rem; margin: 1rem 0;">Plot Twist! Scene Not Found.</h2>
+            <p class="text-secondary reveal stagger-3" style="max-width: 500px; margin: 0 auto 2rem;">The page you are looking for has been cut from the final edit or never existed in this timeline.</p>
+            <div class="reveal stagger-4">
+                <a href="index.html" class="btn btn-primary btn-lg"><i class="fa-solid fa-film" style="margin-right: 8px;"></i> Return to Main Feature</a>
+            </div>
+        </div>
+        
+        <!-- Film strips overlay -->
+        <div style="position: absolute; top: 0; left: 10%; width: 100px; height: 100%; border-left: 10px dashed rgba(255,255,255,0.05); border-right: 10px dashed rgba(255,255,255,0.05); z-index: 0;"></div>
+        <div style="position: absolute; top: 0; right: 10%; width: 100px; height: 100%; border-left: 10px dashed rgba(255,255,255,0.05); border-right: 10px dashed rgba(255,255,255,0.05); z-index: 0;"></div>
+    </div>
+
+</body>
+</html>

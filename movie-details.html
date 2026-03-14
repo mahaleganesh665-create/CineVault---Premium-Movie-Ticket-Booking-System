@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Details | CineVault</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+
+    <style>
+        .movie-banner {
+            position: relative;
+            height: 70vh;
+            min-height: 500px;
+            display: flex;
+            align-items: flex-end;
+            padding-bottom: 4rem;
+        }
+
+        .banner-img {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.7);
+        }
+
+        .banner-gradient {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to top, var(--bg-primary) 0%, rgba(5,5,5,0.8) 30%, transparent 100%);
+            z-index: -1;
+        }
+
+        .details-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 4rem;
+            align-items: flex-end;
+        }
+
+        .poster-card {
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.1);
+            transform: translateY(40px);
+            border: 1px solid var(--border-light);
+            background: var(--bg-secondary);
+        }
+
+        .detail-title {
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 5px 15px rgba(0,0,0,0.5);
+        }
+
+        .detail-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            color: #d1d5db;
+        }
+
+        .detail-meta span { display: flex; align-items: center; gap: 0.5rem; }
+
+        .genre-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tag {
+            padding: 0.4rem 1rem;
+            background: var(--bg-glass-light);
+            border: 1px solid var(--border-light);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .detail-desc {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            max-width: 800px;
+        }
+
+        /* Show Timing Section */
+        .booking-section {
+            padding: 4rem 0;
+            margin-top: 2rem;
+        }
+
+        .date-selector {
+            display: flex;
+            gap: 1rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 3rem;
+            scrollbar-width: none; /* Firefox */
+        }
+        .date-selector::-webkit-scrollbar { display: none; }
+
+        .date-card {
+            min-width: 100px;
+            padding: 1rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .date-card:hover {
+            background: var(--bg-glass-light);
+            border-color: var(--text-secondary);
+        }
+
+        .date-card.active {
+            background: var(--accent-red);
+            border-color: var(--accent-red);
+            box-shadow: var(--shadow-neon-red);
+            transform: translateY(-5px);
+        }
+
+        .date-card .day { font-size: 0.9rem; text-transform: uppercase; color: var(--text-secondary); }
+        .date-card.active .day { color: rgba(255,255,255,0.8); }
+        .date-card .date { font-size: 1.5rem; font-weight: 700; }
+
+        .theatre-card {
+            background: var(--bg-glass);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .theatre-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+
+        .theatre-name {
+            font-size: 1.5rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .theatre-location {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .times-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .time-btn {
+            padding: 0.8rem 1.5rem;
+            background: transparent;
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .time-btn:hover {
+            background: rgba(59, 130, 246, 0.1);
+            box-shadow: var(--shadow-neon-blue);
+            transform: translateY(-2px);
+        }
+        
+        @media (max-width: 900px) {
+            .details-grid {
+                grid-template-columns: 1fr;
+                text-align: center;
+                gap: 2rem;
+            }
+            .poster-card {
+                max-width: 250px;
+                margin: 0 auto;
+            }
+            .detail-meta, .genre-tags {
+                justify-content: center;
+            }
+        }
+
+        /* Trailer Modal */
+        #trailerModal .modal-content {
+            background: #000;
+            width: 90%;
+            max-width: 1000px;
+            aspect-ratio: 16/9;
+            padding: 0;
+            border: 1px solid var(--border-light);
+            position: relative;
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: -40px; right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="page-enter">
+
+    <!-- Navigation -->
+    <nav class="navbar scrolled">
+        <div class="container nav-container">
+            <a href="index.html" class="nav-logo">CINE<span>VAULT</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="movies.html">Movies</a>
+                <a href="#">Theatres</a>
+                <div id="user-links" style="display: none; align-items: center; gap: 1.5rem; margin-left: 2rem;">
+                    <a href="bookings.html" class="view-all"><i class="fa-solid fa-ticket"></i> My Tickets</a>
+                </div>
+            </div>
+            <i class="fa-solid fa-bars mobile-menu-btn"></i>
+        </div>
+    </nav>
+
+    <!-- Content Injected via JS -->
+    <main id="movieContent">
+        <div style="height: 100vh; display: flex; align-items: center; justify-content: center;">
+            <div class="loader"></div>
+        </div>
+    </main>
+
+    <!-- Trailer Modal -->
+    <div id="trailerModal" class="modal-overlay" style="position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:9999; display:flex; align-items:center; justify-content:center;">
+        <div class="modal-content">
+            <i class="fa-solid fa-times close-modal" onclick="closeTrailer()"></i>
+            <!-- Placeholder for iframe -->
+            <div id="trailerContainer" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: #111;">
+                <p class="text-secondary"><i class="fa-solid fa-play fa-3x"></i><br><br>Trailer simulation (No actual video loaded to save bandwidth)</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="js/supabase.js"></script>
+    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/movies.js"></script>
+    <script type="module" src="js/booking.js"></script>
+    <script>
+        function closeTrailer() {
+            document.getElementById('trailerModal').classList.remove('active');
+        }
+        window.closeTrailer = closeTrailer;
+    </script>
+</body>
+</html>
