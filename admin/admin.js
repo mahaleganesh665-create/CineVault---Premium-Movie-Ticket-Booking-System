@@ -1,4 +1,4 @@
-import { supabase, USE_MOCK_DATA } from '../js/supabase.js';
+import { supabase, USE_MOCK_DATA } from '/js/supabase.js';
 
 // --- Auth Check ---
 const sessionData = localStorage.getItem('adminSession');
