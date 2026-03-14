@@ -111,10 +111,12 @@ async function loadDashboardData() {
         document.getElementById('statBookings').innerText = bookings.length;
 
         const { count: moviesCount } = await supabase.from('movies').select('*', { count: 'exact', head: true });
-        document.getElementById('statMovies').innerText = moviesCount || 0;
+        const statMovies = document.getElementById('statMovies');
+        if (statMovies) statMovies.innerText = moviesCount || 0;
 
         const { count: tCount } = await supabase.from('theatres').select('*', { count: 'exact', head: true });
-        document.getElementById('statTheatres').innerText = tCount || 0;
+        const statTheatres = document.getElementById('statTheatres');
+        if (statTheatres) statTheatres.innerText = tCount || 0;
 
         const tbody = document.getElementById('adminBookingsTableContent');
         const recent = bookings.slice(0, 5); // Just 5 for dashboard
@@ -213,10 +215,10 @@ async function loadTheatresData() {
         data.forEach(t => {
             html += `
                 <tr>
-                    <td><strong>${t.name}</strong></td>
-                    <td><i class="fa-solid fa-location-dot" style="color: var(--accent-red); margin-right: 5px;"></i> ${t.location}</td>
-                    <td>${t.total_screens}</td>
-                    <td>${t.amenities.join(', ')}</td>
+                    <td><strong>${t.name || 'Unknown'}</strong></td>
+                    <td><i class="fa-solid fa-location-dot" style="color: var(--accent-red); margin-right: 5px;"></i> ${t.location || 'N/A'}</td>
+                    <td>${t.total_screens || 0}</td>
+                    <td>${(t.amenities || []).join(', ')}</td>
                     <td>
                         <button class="action-btn btn-del" onclick="window.deleteTheatre('${t.id}')" title="Delete Theatre"><i class="fa-solid fa-trash"></i></button>
                     </td>
@@ -257,7 +259,7 @@ async function loadAllBookingsData() {
                     <td style="font-family: monospace;">${b.booking_reference}</td>
                     <td>${b.movie_title}</td>
                     <td>${d.getDate()} ${d.toLocaleString('default', { month: 'short' })}</td>
-                    <td>${b.seats.join(', ')}</td>
+                    <td>${(b.seats || []).join(', ')}</td>
                     <td>${b.user_id ? 'Authenticated' : 'Guest'}</td>
                     <td>
                         <button class="action-btn btn-del" onclick="window.deleteBooking('${b.id}')" title="Cancel Booking"><i class="fa-solid fa-ban"></i> Cancel</button>
