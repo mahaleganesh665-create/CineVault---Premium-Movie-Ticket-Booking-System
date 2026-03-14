@@ -104,7 +104,8 @@
   transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.modal-overlay.active .modal-content {
+.modal-overlay.active .modal-content,
+.modal.active .modal-content {
   transform: scale(1) translateY(0);
   opacity: 1;
 }
